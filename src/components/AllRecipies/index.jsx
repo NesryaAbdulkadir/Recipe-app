@@ -1,69 +1,32 @@
 import { Youtube } from "lucide-react";
 import React, { useEffect, useState } from "react";
-
-export default function AllRecipies() {
-  const [recipes, setRecipes] = useState([]);
-
-  async function getRecipes() {
-    const response = await fetch(
-      "https://www.themealdb.com/api/json/v1/1/search.php?f=a"
-    );
-    const data = await response.json();
-    if (data.meals) {
-      const structuredMeals = data.meals.map((meal) => ({
-        id: meal.idMeal,
-        meal: meal.strMeal,
-        ingredients: [
-          {
-            ingredient: meal.strIngredient1,
-            measurement: meal.strMeasure1,
-          },
-          {
-            ingredient: meal.strIngredient2,
-            measurement: meal.strMeasure2,
-          },
-          {
-            ingredient: meal.strIngredient3,
-            measurement: meal.strMeasure3,
-          },
-          {
-            ingredient: meal.strIngredient4,
-            measurement: meal.strMeasure4,
-          },
-          {
-            ingredient: meal.strIngredient5,
-            measurement: meal.strMeasure5,
-          },
-          {
-            ingredient: meal.strIngredient6,
-            measurement: meal.strMeasure6,
-          },
-          {
-            ingredient: meal.strIngredient7,
-            measurement: meal.strMeasure7,
-          },
-          {
-            ingredient: meal.strIngredient8,
-            measurement: meal.strMeasure8,
-          },
-          {
-            ingredient: meal.strIngredient9,
-            measurement: meal.strMeasure9,
-          },
-        ],
-        catagory: meal.strCategory,
-        instructions: meal.strInstructions,
-        tags: meal.strTags?.split(","),
-        image: meal.strMealThumb,
-        youtube: meal.strYoutube,
-      }));
-      setRecipes(structuredMeals);
-    }
-  }
-
+import useFetch from "../../hooks/useFetch";
+export default function AllRecipies({ recipes, setRecipes }) {
+  const url = "https://www.themealdb.com/api/json/v1/1/search.php?s=b";
+  const meals = useFetch(url);
   useEffect(() => {
-    getRecipes();
-  }, []);
+    const structuredMeals = meals.map((meal) => ({
+      id: meal.idMeal,
+      meal: meal.strMeal,
+      ingredients: [
+        { ingredient: meal.strIngredient1, measurement: meal.strMeasure1 },
+        { ingredient: meal.strIngredient2, measurement: meal.strMeasure2 },
+        { ingredient: meal.strIngredient3, measurement: meal.strMeasure3 },
+        { ingredient: meal.strIngredient4, measurement: meal.strMeasure4 },
+        { ingredient: meal.strIngredient5, measurement: meal.strMeasure5 },
+        { ingredient: meal.strIngredient6, measurement: meal.strMeasure6 },
+        { ingredient: meal.strIngredient7, measurement: meal.strMeasure7 },
+        { ingredient: meal.strIngredient8, measurement: meal.strMeasure8 },
+        { ingredient: meal.strIngredient9, measurement: meal.strMeasure9 },
+      ],
+      category: meal.strCategory,
+      instructions: meal.strInstructions,
+      tags: meal.strTags?.split(","),
+      image: meal.strMealThumb,
+      youtube: meal.strYoutube,
+    }));
+    setRecipes(structuredMeals);
+  }, [meals, setRecipes]);
 
   return (
     <div className="w-[90%] mx-auto">
